@@ -1,3 +1,4 @@
 node_modules/*
 package-lock.json
-report/*
+report/*.json
+report/*.html
