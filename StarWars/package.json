@@ -1,0 +1,21 @@
+{
+  "name": "StarWars",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "jefersonpersan",
+  "license": "ISC",
+  "devDependencies": {
+    "codeceptjs": "^2.6.10",
+    "puppeteer": "^5.2.1",
+    "chai": "^4.2.0"
+  },
+  "dependencies": {
+    "codeceptjs-chai": "^2.2.0",
+    "mochawesome": "^6.1.1"
+  }
+}
