@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const { I } = inject();
 
-Feature('planet');
+Feature('api planet');
 
 Scenario('verifica status chamada', async () => {
     const res = await I.sendGetRequest('/api/planets/1/');
