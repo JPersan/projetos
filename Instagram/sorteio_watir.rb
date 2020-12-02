@@ -1,4 +1,6 @@
 require 'watir'
+require 'gemoji'
+require_relative 'emoji.rb'
 
 puts '=> Você deseja visualizar a execução?
         1 - Sim
@@ -34,27 +36,25 @@ browser.send_keys :enter
 browser.text_field(class_name: 'XTCLo').set 'binhhoovideos'
 browser.div(class: 'uyeeR').click
 
-
-x = 0
+x = 0 
 while x < qtde       
     browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: 0).click
-    sleep 5
     browser.div(class: 'RxpZH').click
-    browser.textarea(class: 'Ypffh').set msg
+    browser.textarea(class: 'Ypffh').set $emoji.raw
     browser.send_keys :enter
-
     sleep 5
 
     if browser.text.include? 'post comment.'
-       puts 'msg exibida. Aguardar 50seg'
-       sleep 50
+       browser.send_keys :escape
+       puts 'Msg exibida. Aguardar 60seg'
+       sleep 500
 
     else
+        browser.send_keys :escape
         puts x
+        sleep 50
     end
-
-    browser.send_keys :escape
     x+=1
-    
+
 end
   
