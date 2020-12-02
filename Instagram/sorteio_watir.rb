@@ -3,12 +3,12 @@ require 'watir'
 puts '=> Você deseja visualizar a execução?
         1 - Sim
         2 - Não'
-headless = gets.chomp.to_s
+headless = gets.chomp.to_i
 
 if headless == 1
-    false
+    headless = false
 else
-    true
+    headless = true
 end
 
 puts '=> Informe seu usuário:'
@@ -37,7 +37,7 @@ browser.div(class: 'uyeeR').click
 
 x = 0
 while x < qtde       
-    browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: 1).click
+    browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: 0).click
     sleep 5
     browser.div(class: 'RxpZH').click
     browser.textarea(class: 'Ypffh').set msg
