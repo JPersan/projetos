@@ -17,7 +17,7 @@ class Instagram
         end
         @user = user
         @pesquisa = search
-        @qtde = 4000
+        @qtde = 10000
 
         Watir.logger.level = :error
         @browser = Watir::Browser.new :chrome, headless: headless
@@ -53,7 +53,7 @@ class Instagram
     def comments
         search(@pesquisa)
 
-        x = 2424
+        x = 0
         @y = 0
         while x < @qtde       
             @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: 1).click
