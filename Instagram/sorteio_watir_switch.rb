@@ -18,19 +18,19 @@ class Instagram
 
         @pesquisa = search
         @qtde = 10000
-        #@usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
-        @usuarios = []
+        @usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
+        #@usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04"]
         @user = 0
 
-        puts '=> Quais usuários voce pretende logar no instagram? (Para cada usuário digite e pressione Enter.)'
+        # puts '=> Quais usuários voce pretende logar no instagram? (Para cada usuário digite e pressione Enter.)'
         
-        while true
-            input = gets.chomp
-            break if input.empty?
-                @usuarios << input
-        end
+        # while true
+        #     input = gets.chomp
+        #     break if input.empty?
+        #         @usuarios << input
+        # end
         
-        @usuarios.join(", ")
+        # @usuarios.join(", ")
 
         Watir.logger.level = :error
         @browser = Watir::Browser.new :chrome, headless: false
@@ -80,13 +80,13 @@ class Instagram
     end
 
     def search(item)
-        @browser.text_field(class_name: 'XTCLo').set item
+        @browser.text_field(class_name: 'XTCLo').when_present.set item
         @browser.div(class: 'yCE8d  ').when_present.click
     end
 
     def comments
         search(@pesquisa)
-        x = 913 #contador
+        x = 1379 #contador
         @y = 0
 
         while x < @qtde       
