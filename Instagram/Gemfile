@@ -7,3 +7,4 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 # gem "rails"
 gem "watir", '6.8.4'
 gem "gemoji", '3.0.1'
+gem "whatlanguage", '1.0.6'
