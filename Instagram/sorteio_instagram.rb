@@ -1,5 +1,6 @@
 require 'watir'
 require 'gemoji'
+require 'whatlanguage'
 require_relative 'emoji.rb'
 
 class Instagram
@@ -8,6 +9,7 @@ class Instagram
     $pesquisa = gets.chomp
 
     def initialize(search)
+        @wl = WhatLanguage.new(:all)
         # puts '=> Você deseja visualizar a execução?
         #         1 - Sim
         #         2 - Não'
@@ -44,19 +46,20 @@ class Instagram
         Watir.logger.level = :error
         @browser = Watir::Browser.new :chrome, headless: false
         @browser.goto "https://www.instagram.com"
+        idioma
         login
         puts '############  CONTADOR DE COMENTÁRIOS  ##############'
         comments
     end
 
     def login
-        @browser.text_field(name: 'username').set @usuarios[@user]
-        @browser.text_field(name: 'password').set @senha
+        @browser.text_field(name: @username).set @usuarios[@user]
+        @browser.text_field(name: @password).set @senha
         @browser.send_keys :enter
-        @browser.button(text: 'Log in with Facebook').wait_while(&:present?) #aguarda até a tela de login sumir 
+        @browser.button(text: @login_facebook).wait_while(&:present?) #aguarda até a tela de login sumir 
 
-        if @browser.text.include?('Turn on Notification') #popup de notificação
-            @browser.button(text: 'Not Now').click #click no botão do popup
+        if @browser.text.include?(@turn_on_notification) #popup de notificação
+            @browser.button(text: @not_now).click #click no botão do popup
         end
     end
 
@@ -91,7 +94,8 @@ class Instagram
 
     def search(item)
         @browser.text_field(class_name: 'XTCLo').when_present.set item
-        @browser.div(class: 'yCE8d  ').when_present.click
+        @browser.a(text: /redbrandao/).focus
+        @browser.send_keys :enter
     end
 
     def comments
@@ -118,7 +122,7 @@ class Instagram
                   puts x
                   sleep 50 #tempo de espera de um comentario para o outro
                end
-            elsif @browser.text.include?('post comment.') and @usuarios.count == 1
+            elsif @browser.text.include?(@post_comment) and @usuarios.count == 1
                   puts '############  FIM DA EXECUÇÃO  ##############'
                   puts "=> Quer executar o script novamente?(Y/N)"
                     opt = gets.chomp
@@ -128,7 +132,7 @@ class Instagram
                     else
                         exit #a execução finalizará quando houver apenas um usuário e exibir a mensagem de comentário bloqueado
                     end
-            elsif @browser.text.include?('post comment.')
+            elsif @browser.text.include?(@post_comment)
                   @usuarios.delete(@usuarios[@user]) #usuário bloqueado é removido para não logar novamente durante esta execução
                   puts @usuarios
                   @user = 0
@@ -140,6 +144,27 @@ class Instagram
                 @y+=1
                 puts x
             end
+        end
+    end
+
+    def idioma
+        button = @browser.element(xpath: '//*[@id="loginForm"]/div/div[5]/button/span[2]').text
+        idioma = @wl.language(button)
+
+        if idioma == 'portuguese'
+            @username = 'usuário'
+            @password = 'senha'
+            @turn_on_notification = 'Ativar notificações' 
+            @not_now = 'Agora não'
+            @post_comment = 'publicar o comentário'
+            @login_facebook = 'Entrar com o Facebook'
+        else
+            @username = 'username'
+            @password = 'password'
+            @turn_on_notification = 'Turn on Notification' 
+            @not_now = 'Not Now'
+            @post_comment = 'post comment'
+            @login_facebook = 'Log in with Facebook'
         end
     end
 end
