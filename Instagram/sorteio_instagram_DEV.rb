@@ -5,6 +5,7 @@ require_relative 'emoji.rb'
 class Instagram
 
     def initialize(search)
+        @wl = WhatLanguage.new(:all)
         # puts '=> Você deseja visualizar a execução?
         #         1 - Sim
         #         2 - Não'
@@ -16,10 +17,10 @@ class Instagram
         #     headless = true
         # end
 
-        @pesquisa = search
+        $pesquisa = search
         @qtde = 10000
         #@usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
-        @usuarios = ["jpersan03", "jpersan04", "jpersan05", "jpersan06"]
+        @usuarios = ["jpersan02", "jpersan04", "jpersan05", "jpersan06"]
         @user = 0
 
         # puts '=> Quais usuários voce pretende logar no instagram? (Para cada usuário digite e pressione Enter.)'
@@ -33,8 +34,9 @@ class Instagram
         # @usuarios.join(", ")
 
         Watir.logger.level = :error
-        @browser = Watir::Browser.new :chrome, headless: true
+        @browser = Watir::Browser.new :chrome, headless: false
         @browser.goto "https://www.instagram.com"
+        idioma
         login
         comments
     end
@@ -45,7 +47,7 @@ class Instagram
         @browser.send_keys :enter
         @browser.button(text: 'Log in with Facebook').wait_while(&:present?) #aguarda até a tela de login sumir 
 
-        if @browser.text.include?('Turn on Notification') #popup de notificação
+        if @browser.text.include?('Turn on Notification' ) #popup de notificação
             @browser.button(text: 'Not Now').click #click no botão do popup
         end
     end
@@ -81,12 +83,13 @@ class Instagram
 
     def search(item)
         @browser.text_field(class_name: 'XTCLo').when_present.set item
-        @browser.div(class: 'yCE8d  ').when_present.click
+        @browser.a(text: /#{$pesquisa}/).focus
+        @browser.send_keys :enter
     end
 
     def comments
-        search(@pesquisa)
-        x = 800 #contador
+        search($pesquisa)
+        x = 1014 #contador
         @y = 0
 
         while x < @qtde 
@@ -102,21 +105,21 @@ class Instagram
                if @usuarios.count != 1
                   @user+=1 
                   switch_accounts
-                  search(@pesquisa)
+                  search($pesquisa)
                else
                   x+=1
                   puts x
                   sleep 50 #tempo de espera de um comentario para o outro
                end
-            elsif @browser.text.include?('post comment.') and @usuarios.count == 1
+            elsif @browser.text.include?('post comment') and @usuarios.count == 1
                   puts "############  FIM DA EXECUÇÃO  ##############"
                   exit #a execução finalizará quando houver apenas um usuário e exibir a mensagem de comentário bloqueado
-            elsif @browser.text.include?('post comment.')
+            elsif @browser.text.include?('post comment')
                   @usuarios.delete(@usuarios[@user]) #usuário bloqueado é removido para não logar novamente durante esta execução
                   puts @usuarios
                   @user = 0
                   switch_accounts
-                  search(@pesquisa)
+                  search($pesquisa)
             else
                 sleep 50 #tempo de espera de um comentario para o outro
                 x+=1
