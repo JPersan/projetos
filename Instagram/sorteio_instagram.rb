@@ -58,7 +58,7 @@ class Instagram
         @browser.send_keys :enter
         @browser.button(text: @login_facebook).wait_while(&:present?) #aguarda até a tela de login sumir 
 
-        if @browser.text.include?(@turn_on_notification) #popup de notificação
+        if @browser.text.include?(@turn_on_notification).to_s #popup de notificação
             @browser.button(text: @not_now).click #click no botão do popup
         end
     end
@@ -77,7 +77,7 @@ class Instagram
         #@browser.div(class: 'mwD2G').click #flag para armazenar dados de conta logada
         #@browser.button(text: 'Log In').click
 
-        if @browser.text.include?('There was a problem logging you into Instagram.')
+        if @browser.text.include?(@msg_erro)
             @usuarios.delete(@usuarios[@user])
             puts 'msg erro login'
             @user+=1
@@ -94,7 +94,7 @@ class Instagram
 
     def search(item)
         @browser.text_field(class_name: 'XTCLo').when_present.set item
-        @browser.a(text: /redbrandao/).focus
+        @browser.a(text: /#{$pesquisa}/).focus
         @browser.send_keys :enter
     end
 
@@ -116,13 +116,13 @@ class Instagram
                if @usuarios.count != 1
                   @user+=1 
                   switch_accounts
-                  search(@pesquisa)
+                  search($pesquisa)
                else
                   x+=1
                   puts x
                   sleep 50 #tempo de espera de um comentario para o outro
                end
-            elsif @browser.text.include?(@post_comment) and @usuarios.count == 1
+            elsif @browser.text.include?(@post_comment).to_s and @usuarios.count == 1
                   puts '############  FIM DA EXECUÇÃO  ##############'
                   puts "=> Quer executar o script novamente?(Y/N)"
                     opt = gets.chomp
@@ -132,12 +132,12 @@ class Instagram
                     else
                         exit #a execução finalizará quando houver apenas um usuário e exibir a mensagem de comentário bloqueado
                     end
-            elsif @browser.text.include?(@post_comment)
+            elsif @browser.text.include?(@post_comment).to_s
                   @usuarios.delete(@usuarios[@user]) #usuário bloqueado é removido para não logar novamente durante esta execução
                   puts @usuarios
                   @user = 0
                   switch_accounts
-                  search(@pesquisa)
+                  search($pesquisa)
             else
                 sleep 50 #tempo de espera de um comentario para o outro
                 x+=1
@@ -148,23 +148,20 @@ class Instagram
     end
 
     def idioma
-        button = @browser.element(xpath: '//*[@id="loginForm"]/div/div[5]/button/span[2]').text
+        button = @browser.element(xpath: '//*[@id="loginForm"]/a').text
         idioma = @wl.language(button)
+        puts idioma
 
-        if idioma == 'portuguese'
+        if idioma == ':portuguese'
             @username = 'usuário'
             @password = 'senha'
             @turn_on_notification = 'Ativar notificações' 
             @not_now = 'Agora não'
-            @post_comment = 'publicar o comentário'
+            @post_comment = 'Não foi possível publicar o comentário.'
             @login_facebook = 'Entrar com o Facebook'
+            @msg_erro = 'problema'
         else
-            @username = 'username'
-            @password = 'password'
-            @turn_on_notification = 'Turn on Notification' 
-            @not_now = 'Not Now'
-            @post_comment = 'post comment'
-            @login_facebook = 'Log in with Facebook'
+            exit
         end
     end
 end
