@@ -44,6 +44,12 @@ class Instagram
         Watir.logger.level = :error
         @browser = Watir::Browser.new :chrome, headless: false
         @browser.goto "https://www.instagram.com"
+
+        @browser.text_field(name: 'username').wait_until(&:present?)
+        if @browser.text.include?('Forgot password?')
+            exit
+        end
+            
         login
         puts '############  CONTADOR DE COMENTÁRIOS  ##############'
         comments
