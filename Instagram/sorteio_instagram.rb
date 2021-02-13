@@ -28,6 +28,9 @@ class Instagram
         puts '=> Iniciado em 0(zero) qual posição a foto do sorteio está na timeline do instagram?'
         @foto = gets.chomp
 
+        puts '=> Qual comentário você quer fazer na publicação?'
+        @comentario = gets.chomp
+
         puts '=> Quais usuários voce pretende logar no instagram? (Para cada usuário digite e pressione ENTER. Para o ultimo usuário pressione ENTER 2x)'
         
         while true
@@ -110,12 +113,13 @@ class Instagram
             sleep 2      
             @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: @foto.to_i).click #o index é a posição da foto na timeline iniciada em 0
             @browser.div(class: 'RxpZH').click
-            @browser.textarea(class: 'Ypffh').set $emoji.raw #+ " #{x}"
+            #@browser.textarea(class: 'Ypffh').set $emoji.raw #+ " #{x}"
+            @browser.textarea(class: 'Ypffh').set @comentario
             @browser.send_keys :enter
             sleep 5
             @browser.send_keys :escape
 
-            if @y == 3 #qtde de comentários por usuario
+            if @y == 10 #qtde de comentários por usuario
                if @usuarios.count != 1
                   @user+=1 
                   switch_accounts
