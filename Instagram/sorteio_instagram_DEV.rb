@@ -7,7 +7,8 @@ class Instagram
      
     #$usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
     $usuarios = ["jpersan03", "jpersan04"]
-    $senha = '02042010'
+    puts '=> Qual a senha dos usuários?(A senha precisa ser igual para todos os usuários que inseriu. Digite apenas uma única vez e pressione ENTER.)'
+    $senha = gets.chomp
     $pesquisa = 'redbrandao'
     $foto = 2
     $qtde = 10000
