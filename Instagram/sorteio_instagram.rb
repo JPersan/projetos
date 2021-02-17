@@ -35,6 +35,7 @@ class Instagram
     def initialize(search)
         begin
             @browser = Watir::Browser.new :chrome
+            Watir.logger.level = :error
             @browser.goto "https://www.instagram.com"
             @browser.text_field(name: 'username').wait_until(&:present?)
             
