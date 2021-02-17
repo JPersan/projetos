@@ -34,8 +34,9 @@ class Instagram
 
     def initialize(search)
         begin
-            Watir.logger.level = :error
-            @browser = Watir::Browser.new :chrome, headless: false
+            chromedriver_path = File.join(File.absolute_path('resources', File.dirname(__FILE__)), "chromedriver.exe")
+            Selenium::WebDriver::Chrome.driver_path = chromedriver_path
+            @browser = Watir::Browser.new :chrome
             @browser.goto "https://www.instagram.com"
             @browser.text_field(name: 'username').wait_until(&:present?)
             
@@ -109,7 +110,7 @@ class Instagram
         while $x < $qtde 
             sleep 2
             loop do
-                @browser.scroll.to [10, 1000]    
+                @browser.scroll.to [10, 600]    
                 break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i).present?
             end      
 
@@ -131,7 +132,6 @@ class Instagram
                end
             elsif @browser.text.include?('Não foi possível publicar o comentário.') and $usuarios.count == 1
                   puts '############  FIM DA EXECUÇÃO / TODOS OS USUÁRIOS ESTÃO BLOQUEADOS  ##############'
-                  save_file
                   exit #a execução finalizará quando houver apenas um usuário e exibir a mensagem de comentário bloqueado
             elsif @browser.text.include?('Não foi possível publicar o comentário.')
                   $usuarios.delete($usuarios[$user]) #usuário bloqueado é removido para não logar novamente durante esta execução
@@ -141,9 +141,9 @@ class Instagram
             else
                 $x+=1
                 @y+=1
-                painel
-                sleep 50 #tempo de espera de um comentario para o outro
+                sleep 55 #tempo de espera de um comentario para o outro
             end
+            save_file
             painel
         end
     end
@@ -151,11 +151,11 @@ class Instagram
     def save_file
         time = Time.now.strftime("%I:%M %p")
 
-        if Dir.exist?('C:\Instagram_Comentários') == false
-            FileUtils.mkdir_p 'C:\Instagram_Comentários'
+        if Dir.exist?('C:\Instagram_Comentarios') == false
+            FileUtils.mkdir_p 'C:\Instagram_Comentarios'
          end
 
-        arq = File.open('C:\Instagram_Comentários\Contagem.txt', 'w')
+        arq = File.open("C:\\Instagram_Comentarios\\sorteio_#{$pesquisa}.txt", 'w')
         arq.puts "
         Horário que parou a execução: #{time} 
         Qtde de comentários feitos: #{$x}"
@@ -164,13 +164,22 @@ class Instagram
 
     def painel
         system 'cls'
-        puts "
+        if $usuarios.count == 1
+            puts "
+###################################################################
+# Número de Comentários: #{$x}                                 
+# Usuários Ativos: #{$usuarios.count}                              
+# Usuário Comentando: #{$usuarios[$user]}                                                 
+###################################################################################"            
+        else
+            puts "
 ###################################################################
 # Número de Comentários: #{$x}                                 
 # Usuários Ativos: #{$usuarios.count}                              
 # Usuário Comentando: #{$usuarios[$user]}                               
 # Faltam #{@k-@y} comentários para a troca de usuário.                     
 ###################################################################################"
+        end
     end
 end
 
