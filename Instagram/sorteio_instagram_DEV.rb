@@ -1,51 +1,52 @@
 require 'watir'
+require 'watir-scroll'
 require 'gemoji'
 require_relative 'emoji.rb'
 
 class Instagram
 
+    $x = 2303 #contador
+    #$x = 0
+    #$usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
+    $usuarios = ["nanybonani"]
+    $qtde = 10000
+    $user = 0
+
     def initialize(search)
-        @wl = WhatLanguage.new(:all)
-        # puts '=> Você deseja visualizar a execução?
-        #         1 - Sim
-        #         2 - Não'
-        # headless = gets.chomp.to_i
-
-        # if headless == 1
-        #     headless = false
-        # else
-        #     headless = true
-        # end
-
         $pesquisa = search
-        @qtde = 10000
-        #@usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
-        @usuarios = ["jpersan02", "jpersan04", "jpersan05", "jpersan06"]
-        @user = 0
+        begin
+            Watir.logger.level = :error
+            @browser = Watir::Browser.new :chrome, headless: false
+            @browser.goto "https://www.instagram.com"
+            login                                                                         
+            comments
 
-        # puts '=> Quais usuários voce pretende logar no instagram? (Para cada usuário digite e pressione Enter.)'
-        
-        # while true
-        #     input = gets.chomp
-        #     break if input.empty?
-        #         @usuarios << input
-        # end
-        
-        # @usuarios.join(", ")
-
-        Watir.logger.level = :error
-        @browser = Watir::Browser.new :chrome, headless: false
-        @browser.goto "https://www.instagram.com"
-        idioma
-        login
-        comments
+        rescue StandardError => e
+            if $usuarios.count == 1
+                puts e.message
+            else
+                @browser.close
+                initialize($pesquisa)
+            end
+        end
     end
 
     def login
-        @browser.text_field(name: 'username').set @usuarios[@user]
-        @browser.text_field(name: 'password').set '02042010'
+        @browser.text_field(name: 'username').set $usuarios[$user]
+        @browser.text_field(name: 'password').set 'Portyner01'
         @browser.send_keys :enter
+
+        sleep 1
+        if @browser.text.include?('Please wait a few minutes before you try again.')
+            $user+=1
+            login
+        end
+
         @browser.button(text: 'Log in with Facebook').wait_while(&:present?) #aguarda até a tela de login sumir 
+
+        @y = 0
+        @k = 30
+        painel       
 
         if @browser.text.include?('Turn on Notification' ) #popup de notificação
             @browser.button(text: 'Not Now').click #click no botão do popup
@@ -55,30 +56,15 @@ class Instagram
     def switch_accounts
         @y = 0
 
-        if @user >= @usuarios.count
-            @user=0
+        if $user >= $usuarios.count
+            $user=0
         end
 
         @browser.div(xpath: "//section/nav/div[2]/div/div/div[3]/div/div[5]").click
         @browser.div(xpath: "//section/nav/div[2]/div/div/div[3]/div/div[5]/div[2]/div[2]/div[2]/div[1]").click
-        #@browser.button(text: 'Log into an Existing Account').click #click botão para trocar de conta
         login
         #@browser.div(class: 'mwD2G').click #flag para armazenar dados de conta logada
         #@browser.button(text: 'Log In').click
-
-        if @browser.text.include?('There was a problem logging you into Instagram.')
-            @usuarios.delete(@usuarios[@user])
-            puts 'msg erro login'
-            @user+=1
-            login
-        # elsif  
-        #     @browser.text.include?('Facebook')
-        #     login
-        #     @browser.button(text: 'Log In').click
-        # else
-        end
-
-        #@browser.div(class: 'EPjEi').wait_while(&:present?)
     end
 
     def search(item)
@@ -89,45 +75,81 @@ class Instagram
 
     def comments
         search($pesquisa)
-        x = 1014 #contador
         @y = 0
+        @k = 30
 
-        while x < @qtde 
-            sleep 2      
-            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: 0).click #o index é a posição da foto na timeline iniciada em 0
+        while $x < $qtde 
+            sleep 2  
+            loop do
+                @browser.scroll.to [10, 1000]    
+                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: 20).present?
+            end
+
+            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: 20).click #o index é a posição da foto na timeline iniciada em 0
             @browser.div(class: 'RxpZH').click
-            @browser.textarea(class: 'Ypffh').set $emoji.raw #+ " #{x}"
-            @browser.send_keys :enter
+            @browser.textarea(class: 'Ypffh').set '@lubani @andpsantos' #$emoji.raw
+            @browser.button(xpath: '/html/body/div[4]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
             sleep 5
             @browser.send_keys :escape
 
-            if @y == 3 #qtde de comentários por usuario
-               if @usuarios.count != 1
-                  @user+=1 
+            if @y == 30 #qtde de comentários por usuario
+               if $usuarios.count != 1
+                  $user+=1 
                   switch_accounts
                   search($pesquisa)
                else
-                  x+=1
-                  puts x
-                  sleep 50 #tempo de espera de um comentario para o outro
+                  $x+=1
+                  sleep 55 #tempo de espera de um comentario para o outro
                end
-            elsif @browser.text.include?('post comment') and @usuarios.count == 1
-                  puts "############  FIM DA EXECUÇÃO  ##############"
+            elsif @browser.text.include?('post comment') and $usuarios.count == 1
+                  puts '############  FIM DA EXECUÇÃO / TODOS OS USUÁRIOS ESTÃO BLOQUEADOS  ##############'
+                  save_file
                   exit #a execução finalizará quando houver apenas um usuário e exibir a mensagem de comentário bloqueado
             elsif @browser.text.include?('post comment')
-                  @usuarios.delete(@usuarios[@user]) #usuário bloqueado é removido para não logar novamente durante esta execução
-                  puts @usuarios
-                  @user = 0
+                  $usuarios.delete($usuarios[$user]) #usuário bloqueado é removido para não logar novamente durante esta execução
+                  $user = 0
                   switch_accounts
                   search($pesquisa)
             else
-                sleep 50 #tempo de espera de um comentario para o outro
-                x+=1
+                $x+=1
                 @y+=1
-                puts x
+                painel
+                sleep 55 #tempo de espera de um comentario para o outro
             end
+            painel
+            
         end
+    end 
+
+    def save_file
+        time = Time.now.strftime("%I:%M %p")
+
+        if Dir.exist?('C:\Instagram_Comentários') == false
+            FileUtils.mkdir_p 'C:\Instagram_Comentários'
+         end
+
+        arq = File.open('C:\Instagram_Comentários\Contagem.txt', 'w')
+        arq.puts "
+        Horário que parou a execução: #{time} 
+        Qtde de comentários feitos: #{$x}"
+        arq.close
+    end
+
+    def painel
+        system 'cls'
+        puts "
+###################################################################
+# Número de Comentários: #{$x}                                 
+# Usuários Ativos: #{$usuarios.count}                              
+# Usuário Comentando: #{$usuarios[$user]}                               
+# Faltam #{@k-@y} comentários para a troca de usuário.                     
+###################################################################################"
+    end
+    
+    def read_file
+        file_data = File.read('C:\Instagram_Comentários\Contagem.txt').split
+        puts file_data[11]
     end
 end
 
-sorteio = Instagram.new('redbrandao')
+sorteio = Instagram.new('bilaraujjo')
