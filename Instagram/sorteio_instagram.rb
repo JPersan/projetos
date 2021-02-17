@@ -111,10 +111,10 @@ class Instagram
             sleep 2
             loop do
                 @browser.scroll.to [10, 600]    
-                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i).present?
+                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i - 1).present?
             end      
 
-            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i).click #o index é a posição da foto na timeline iniciada em 0
+            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i - 1).click #o index é a posição da foto na timeline iniciada em 0
             @browser.div(class: 'RxpZH').click
             @browser.textarea(class: 'Ypffh').set $comentario
             @browser.button(xpath: '/html/body/div[4]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
