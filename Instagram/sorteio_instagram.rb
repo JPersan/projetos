@@ -1,4 +1,5 @@
 require 'watir'
+require 'watir-scroll'
 require 'gemoji'
 require_relative 'emoji.rb'
 
@@ -109,7 +110,7 @@ class Instagram
             sleep 2
             loop do
                 @browser.scroll.to [10, 1000]    
-                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', $foto.to_i).present?
+                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i).present?
             end      
 
             @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i).click #o index é a posição da foto na timeline iniciada em 0
