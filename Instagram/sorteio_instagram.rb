@@ -13,7 +13,7 @@ class Instagram
     $user = 0
     $x = 0
 
-    puts '=> Iniciado em 0(zero) qual posição a foto do sorteio está na timeline do instagram?'
+    puts "=> Em qual posição está a foto do sorteio na timeline do(a) #{$pesquisa}?"
     $foto = gets.chomp
 
     puts '=> Qual comentário você quer fazer na publicação?'
@@ -34,8 +34,6 @@ class Instagram
 
     def initialize(search)
         begin
-            chromedriver_path = File.join(File.absolute_path('resources', File.dirname(__FILE__)), "chromedriver.exe")
-            Selenium::WebDriver::Chrome.driver_path = chromedriver_path
             @browser = Watir::Browser.new :chrome
             @browser.goto "https://www.instagram.com"
             @browser.text_field(name: 'username').wait_until(&:present?)
