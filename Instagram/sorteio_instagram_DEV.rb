@@ -6,10 +6,10 @@ require_relative 'emoji.rb'
 class Instagram
      
     #$usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
-    $usuarios = ["nanybonani", "jpersan01"]
-    $senha = 'Portyner01'
-    $pesquisa = 'bilaraujjo'
-    $foto = 0
+    $usuarios = ["jpersan03", "jpersan04"]
+    $senha = '02042010'
+    $pesquisa = 'redbrandao'
+    $foto = 2
     $qtde = 10000
     $user = 0
 
@@ -86,12 +86,12 @@ class Instagram
             sleep 2  
             loop do
                 @browser.scroll.to [10, 600]    
-                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto).present?
+                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto - 1).present?
             end
 
-            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto).click #o index é a posição da foto na timeline iniciada em 0
+            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto - 1).click #o index é a posição da foto na timeline iniciada em 0
             @browser.div(class: 'RxpZH').click
-            @browser.textarea(class: 'Ypffh').set '@lubonani @andpsantos' #$emoji.raw
+            @browser.textarea(class: 'Ypffh').set $emoji.raw
             @browser.button(xpath: '/html/body/div[4]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
             sleep 5
             @browser.send_keys :escape
