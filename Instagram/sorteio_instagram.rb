@@ -13,7 +13,7 @@ class Instagram
     $user = 0
     $x = 0
 
-    puts "=> Em qual posição está a foto do sorteio na timeline do(a) #{$pesquisa}?"
+    puts "=> Em qual posição a foto do sorteio está na timeline do(a) #{$pesquisa}?"
     $foto = gets.chomp
 
     puts '=> Qual comentário você quer fazer na publicação?'
@@ -116,7 +116,7 @@ class Instagram
             @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i - 1).click #o index é a posição da foto na timeline iniciada em 0
             @browser.div(class: 'RxpZH').click
             @browser.textarea(class: 'Ypffh').set $comentario
-            @browser.button(xpath: '/html/body/div[4]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
+            @browser.button(xpath: '/html/body/div[5]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
             sleep 5
             @browser.send_keys :escape
 
