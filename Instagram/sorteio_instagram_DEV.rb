@@ -5,12 +5,12 @@ require_relative 'emoji.rb'
 
 class Instagram
      
-    #$usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
-    $usuarios = ["jpersan03", "jpersan04"]
+    $usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
+    #$usuarios = ["jpersan03", "jpersan04"]
     puts '=> Qual a senha dos usuários?(A senha precisa ser igual para todos os usuários que inseriu. Digite apenas uma única vez e pressione ENTER.)'
     $senha = gets.chomp
     $pesquisa = 'redbrandao'
-    $foto = 2
+    $foto = 3
     $qtde = 10000
     $user = 0
 
@@ -93,7 +93,7 @@ class Instagram
             @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto - 1).click #o index é a posição da foto na timeline iniciada em 0
             @browser.div(class: 'RxpZH').click
             @browser.textarea(class: 'Ypffh').set $emoji.raw
-            @browser.button(xpath: '/html/body/div[4]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
+            @browser.button(xpath: '/html/body/div[5]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
             sleep 5
             @browser.send_keys :escape
 
