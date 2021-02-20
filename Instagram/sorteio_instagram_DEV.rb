@@ -66,7 +66,7 @@ class Instagram
         end
 
         @browser.div(xpath: "//section/nav/div[2]/div/div/div[3]/div/div[5]").click
-        @browser.div(xpath: "//section/nav/div[2]/div/div/div[3]/div/div[5]/div[2]/div[2]/div[2]/div[1]").click
+        @browser.div(text: 'Log Out').click
         login
         #@browser.div(class: 'mwD2G').click #flag para armazenar dados de conta logada
         #@browser.button(text: 'Log In').click
