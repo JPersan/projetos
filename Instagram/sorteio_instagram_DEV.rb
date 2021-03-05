@@ -2,13 +2,18 @@ require 'watir'
 require 'watir-scroll'
 require 'gemoji'
 require_relative 'emoji.rb'
+require_relative 'faker.rb'
 
 class Instagram
+
+    $fake = Gerador.new()
      
     $usuarios = ["jpersan01", "jpersan02", "jpersan03", "jpersan04", "jpersan05", "jpersan06"]
-    #$usuarios = ["jpersan03", "jpersan04"]
+    #$usuarios = ["jpersan04"]
+    
     puts '=> Qual a senha dos usuários?(A senha precisa ser igual para todos os usuários que inseriu. Digite apenas uma única vez e pressione ENTER.)'
     $senha = gets.chomp
+    
     $pesquisa = 'redbrandao'
     $foto = 3
     $qtde = 10000
@@ -16,10 +21,11 @@ class Instagram
 
     def initialize(search)
         #$x = 0
+        save_file
         $x = read_file #contador
         begin
-            chromedriver_path = File.join(File.absolute_path('resources', File.dirname(__FILE__)), "chromedriver.exe")
-            Selenium::WebDriver::Chrome.driver_path = chromedriver_path
+            #chromedriver_path = File.join(File.absolute_path('resources', File.dirname(__FILE__)), "chromedriver.exe")
+            #Selenium::WebDriver::Chrome.driver_path = chromedriver_path
             @browser = Watir::Browser.new :chrome
             Watir.logger.level = :error
             @browser.goto "https://www.instagram.com"
@@ -87,12 +93,12 @@ class Instagram
             sleep 2  
             loop do
                 @browser.scroll.to [10, 600]    
-                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto - 1).present?
+                break if @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i - 1).present?
             end
 
-            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto - 1).click #o index é a posição da foto na timeline iniciada em 0
+            @browser.div(class: 'v1Nh3 kIKUG  _bz0w', index: $foto.to_i - 1).click #o index é a posição da foto na timeline iniciada em 0
             @browser.div(class: 'RxpZH').click
-            @browser.textarea(class: 'Ypffh').set $emoji.raw
+            @browser.textarea(class: 'Ypffh').set $emoji.raw #$fake.rua
             @browser.button(xpath: '/html/body/div[5]/div[2]/div/article/div[3]/section[3]/div/form/button[2]').click
             sleep 5
             @browser.send_keys :escape
@@ -127,7 +133,7 @@ class Instagram
     def save_file
         time = Time.now.strftime("%I:%M %p")
 
-        if Dir.exist?('C:\Instagram_Comentarios') == false
+        if Dir.exist?("C:\\Instagram_Comentarios\\sorteio_#{$pesquisa}") == false
             FileUtils.mkdir_p 'C:\Instagram_Comentarios'
          end
 
