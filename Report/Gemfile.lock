@@ -3,10 +3,15 @@ GEM
   specs:
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    comtele_sdk (1.1.6)
+      rest-client
     declarative (0.0.10)
     declarative-option (0.1.0)
+    domain_name (0.5.20190701)
+      unf (>= 0.0.5, < 1.0.0)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
+    ffi (1.15.5-x86-mingw32)
     google-api-client (0.36.4)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 0.9)
@@ -26,20 +31,26 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (~> 0.14)
-    httparty (0.18.0)
-      mime-types (~> 3.0)
+    http-accept (1.7.0)
+    http-cookie (1.0.5)
+      domain_name (~> 0.5)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     jwt (2.2.1)
     memoist (0.16.2)
-    mime-types (3.3.1)
+    mime-types (3.4.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2020.0425)
+    mime-types-data (3.2022.0105)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    netrc (0.11.0)
+    nokogiri (1.10.9)
+      mini_portile2 (~> 2.4.0)
     nokogiri (1.10.9-x86-mingw32)
       mini_portile2 (~> 2.4.0)
     os (1.1.0)
@@ -48,6 +59,17 @@ GEM
       declarative (< 0.1.0)
       declarative-option (< 0.2.0)
       uber (< 0.2.0)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
+    rest-client (2.1.0-x86-mingw32)
+      ffi (~> 1.9)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     retriable (3.1.2)
     ruby-ole (1.2.12.2)
     signet (0.14.0)
@@ -58,12 +80,18 @@ GEM
     spreadsheet (1.2.6)
       ruby-ole (>= 1.0)
     uber (0.1.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8.2)
+    unf_ext (0.0.8.2-x86-mingw32)
     uri (0.10.0)
 
 PLATFORMS
   x86-mingw32
+  x86_64-linux
 
 DEPENDENCIES
+  comtele_sdk
   google-api-client (~> 0.34)
   google_drive
   httparty
